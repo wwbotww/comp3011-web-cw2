@@ -11,6 +11,7 @@ import requests
 
 from src.crawler import (
     BASE_URL,
+    MAX_RETRIES,
     POLITENESS_WINDOW,
     crawl,
     extract_author_urls,
@@ -124,7 +125,7 @@ class TestFetchPage:
             result = fetch_page("https://example.com", session)
 
         assert result is None
-        assert session.get.call_count == MAX_RETRIES()
+        assert session.get.call_count == MAX_RETRIES
 
     def test_retries_on_http_error_and_returns_none(self):
         resp = MagicMock()
@@ -168,11 +169,6 @@ class TestFetchPage:
         assert mock_sleep.call_count == 2
         for c in mock_sleep.call_args_list:
             assert c == call(POLITENESS_WINDOW)
-
-
-def MAX_RETRIES():
-    from src.crawler import MAX_RETRIES as MR
-    return MR
 
 
 # ---------------------------------------------------------------------------

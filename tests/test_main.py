@@ -5,7 +5,6 @@ All crawl/index operations are mocked so tests run instantly.
 """
 
 import json
-from io import StringIO
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 

@@ -12,6 +12,7 @@ Commands
 """
 
 import json
+import logging
 import sys
 from pathlib import Path
 from typing import Any, Optional
@@ -186,4 +187,5 @@ def run_shell() -> None:
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     run_shell()

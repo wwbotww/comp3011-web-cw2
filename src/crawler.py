@@ -10,6 +10,7 @@ A mandatory POLITENESS_WINDOW-second sleep is observed *before* every HTTP
 request (except the very first one) so the target server is not overloaded.
 """
 
+import copy
 import time
 import logging
 from typing import Callable, Optional
@@ -38,7 +39,6 @@ HEADERS = {
 # Module-level logger
 # ---------------------------------------------------------------------------
 
-logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 # Type alias for the progress callback
@@ -98,6 +98,9 @@ def fetch_page(url: str, session: requests.Session) -> Optional[BeautifulSoup]:
 def extract_page_text(soup: BeautifulSoup) -> str:
     """Return the visible text of a page as a single whitespace-normalised string.
 
+    Operates on a *copy* of *soup* so the caller's original tree is not
+    mutated (``decompose()`` is destructive).
+
     Strips ``<script>``, ``<style>``, ``<nav>``, and ``<footer>`` elements
     before extraction to avoid indexing boilerplate.
 
@@ -107,10 +110,11 @@ def extract_page_text(soup: BeautifulSoup) -> str:
     Returns:
         Visible text joined by spaces, with runs of whitespace collapsed.
     """
-    for tag in soup(["script", "style", "nav", "footer"]):
+    tree = copy.copy(soup)
+    for tag in tree(["script", "style", "nav", "footer"]):
         tag.decompose()
 
-    raw = soup.get_text(separator=" ")
+    raw = tree.get_text(separator=" ")
     return " ".join(raw.split())
 
 
@@ -244,7 +248,7 @@ def crawl(
             logger.info("No quotes found on %s — treating as end of listing.", current_url)
             break
 
-        title = soup.title.string.strip() if soup.title else current_url
+        title = soup.title.get_text(strip=True) if soup.title else current_url
         text = extract_page_text(soup)
         pages[current_url] = {"url": current_url, "title": title, "text": text}
         logger.info("  → Stored page '%s' (%d chars of text)", title, len(text))
@@ -284,7 +288,7 @@ def crawl(
             logger.warning("Failed to fetch author page %s — skipping.", author_url)
             continue
 
-        title = soup.title.string.strip() if soup.title else author_url
+        title = soup.title.get_text(strip=True) if soup.title else author_url
         text = extract_page_text(soup)
         pages[author_url] = {"url": author_url, "title": title, "text": text}
         logger.info("  → Stored author page '%s' (%d chars of text)", title, len(text))
