@@ -77,31 +77,40 @@ Target: https://quotes.toscrape.com
   ...
   [author]  https://quotes.toscrape.com/author/Albert-Einstein
 
-[Crawl complete] 20 pages fetched. Building index...
-[Done] Index contains 1500 unique words from 20/20 pages.
+[Crawl complete] 60 pages fetched. Building index...
+[Done] Index contains 4526 unique words from 60/60 pages.
        Saved to: data/index.json
 
 > load
-[Loaded] 1500 unique words from 20/20 pages  (built at 2026-04-04T09:30:00+00:00)
+[Loaded] 4526 unique words from 60/60 pages  (built at 2026-05-05T11:38:27.692209+00:00)
 
 > print nonsense
-Word: "nonsense" — found in 1 page(s)
+Word: "nonsense" — found in 2 page(s)
 
   https://quotes.toscrape.com/page/2/
     frequency : 1
-    positions : [8]
-    tf        : 0.002100
-    tfidf     : 0.006300
+    positions : [287]
+    tf        : 0.002404
+    tfidf     : 0.008176
+
+  https://quotes.toscrape.com/page/7/
+    frequency : 1
+    positions : [208]
+    tf        : 0.003676
+    tfidf     : 0.012503
 
 > find indifference
 Results for "indifference" — 1 page(s) found:
 
-  1. https://quotes.toscrape.com/page/2/  [score: 0.0312]
+  1. https://quotes.toscrape.com/page/2/  [score: 0.0492]
 
 > find good friends
-Results for "good friends" — 1 page(s) found:
+Results for "good friends" — 8 page(s) found:
 
-  1. https://quotes.toscrape.com/page/2/  [score: 0.0198]
+  1. https://quotes.toscrape.com/page/2/  [score: 0.0402]
+  2. https://quotes.toscrape.com/page/6/  [score: 0.0286]
+  3. https://quotes.toscrape.com/page/7/  [score: 0.0167]
+  ...
 ```
 
 ## Testing
@@ -114,14 +123,14 @@ pytest tests/ -v
 pytest tests/ --cov=src --cov-report=term-missing
 ```
 
-Current coverage: **98%** (129 tests across all modules).
+Current coverage: **97%** (129 tests across all modules).
 
 | Module | Coverage |
 |--------|----------|
 | `crawler.py` | 99% |
 | `indexer.py` | 100% |
 | `search.py` | 100% |
-| `main.py` | 93% |
+| `main.py` | 92% |
 
 ## Dependencies
 
